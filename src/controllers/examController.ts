@@ -259,8 +259,8 @@ export const submitExam = catchAsync(
   async (req: CustomRequest, res: Response) => {
     const db = getDb();
     let query;
-    const { answers, finishTime, participantId, examId } = req.body;
-    const userId = req.user?.id;
+    const { answers, finishTime, examId } = req.body;
+    const participantId = req.user?.id;
     if (!answers || !finishTime || !participantId || !examId)
       throw new CustomError('Fields are missing !', 500);
     query =

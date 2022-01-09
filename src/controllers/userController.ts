@@ -13,7 +13,7 @@ const defaultDp =
 
 export const getCurrentUser = catchAsync(
   async (req: CustomRequest, res: Response) => {
-    return res.status(200).json(req.user);
+    return res.status(200).json(SuccessResponse(req.user, 'User found'));
   }
 );
 

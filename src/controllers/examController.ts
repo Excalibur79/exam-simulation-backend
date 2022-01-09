@@ -58,7 +58,7 @@ export const getExams = catchAsync(async (req: Request, res: Response) => {
   let query =
     'select id,name,description,image,tags,startTime,duration,ongoing,isPrivate,(SELECT COUNT(ep.id) FROM `Exam-Participants` AS ep WHERE ep.examId = Exam.id) AS numberOfParticipants from `Exam`';
   let [rows] = await db.execute(query);
-  console.log(rows);
+  // console.log(rows);
   rows.map((exam: any) => {
     exam = parseExam(exam);
   });
@@ -141,7 +141,7 @@ export const editExam = catchAsync(
     let getExamByUserId =
       'select count(*) as examExists from `Exam` where `userId`=? and `id`=? limit 1';
     let [rows] = await db.execute(getExamByUserId, [userId, examId]); //authorization to be added ! to e compared with req.user.id and req.body.userId
-    console.log(rows);
+    // console.log(rows);
     if (!rows[0].examExists) throw new CustomError('Exam not found !', 500);
     //console.log(rows[0]);
     let date = new Date();
@@ -194,6 +194,7 @@ export const registerInExam = catchAsync(
     let query;
     const { examId, email } = req.body;
     const userId = req.user?.id;
+
     //check if the ids are valid then insert in exam-participants table
     query =
       'select isPrivate,userId as creatorId,count(*) as examExists,finished from `Exam` where `id`=? limit 1';
@@ -246,8 +247,8 @@ export const startExam = catchAsync(
       return res
         .status(200)
         .json(SuccessResponse(examRows[0], 'Virtual Exam Started !'));
-    // if (!examRows[0].ongoing)
-    //   throw new CustomError('Exam has not started yet !', 500);
+    if (!examRows[0].ongoing)
+      throw new CustomError('Exam has not started yet !', 500);
 
     //console.log(shuffleExam(examRows[0]));
     res.status(200).json(SuccessResponse(examRows[0], 'Exam Started !'));

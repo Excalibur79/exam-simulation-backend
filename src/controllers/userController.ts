@@ -134,6 +134,7 @@ export const getExamHosted = catchAsync(
   async (req: CustomRequest, res: Response) => {
     const db = getDb();
     const userId = req.user?.id;
+    console.log(req.user);
     let query =
       'select id,name,description,image,userId,tags,startTime,duration,ongoing,finished,isPrivate from `Exam` where `userId`=?';
     const [rows] = await db.execute(query, [userId]);
